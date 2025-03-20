@@ -3,6 +3,7 @@ import 'package:donut_app_2c_flores/tabs/donut_tab.dart';
 import 'package:donut_app_2c_flores/tabs/pancakes_tab.dart';
 import 'package:donut_app_2c_flores/tabs/pizza_tab.dart';
 import 'package:donut_app_2c_flores/tabs/smoothie_tab.dart';
+import 'package:donut_app_2c_flores/utils/car_item.dart';
 import 'package:donut_app_2c_flores/utils/my_tab.dart';
 import 'package:flutter/material.dart';
 
@@ -22,6 +23,45 @@ class _HomePageState extends State<HomePage> {
     const MyTab(iconPath: 'lib/icons/pizza.png'),
   ];
 
+  List<CartItem> cartItems = []; // Lista de productos en el carrito
+
+  // Función para agregar productos al carrito
+  void addToCart(String name, double price) {
+    setState(() {
+      bool itemExists = false;
+      // Verificar si el producto ya está en el carrito
+      for (var item in cartItems) {
+        if (item.name == name) {
+          item.quantity++; // Si ya existe, solo incrementamos la cantidad
+          itemExists = true;
+          break;
+        }
+      }
+      if (!itemExists) {
+        cartItems.add(
+            CartItem(name: name, price: price)); // Si no existe, lo agregamos
+      }
+    });
+  }
+
+  // Obtener el total del carrito
+  double get totalAmount {
+    double total = 0;
+    for (var item in cartItems) {
+      total += item.totalPrice;
+    }
+    return total;
+  }
+
+  // Obtener la cantidad total de items en el carrito
+  int get itemCount {
+    int count = 0;
+    for (var item in cartItems) {
+      count += item.quantity;
+    }
+    return count;
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -29,7 +69,6 @@ class _HomePageState extends State<HomePage> {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.transparent,
-          //icono izquierdo
           leading: Icon(Icons.menu, color: Colors.grey[800]),
           actions: [
             Padding(
@@ -51,11 +90,8 @@ class _HomePageState extends State<HomePage> {
                   ),
                   Text('Eat',
                       style: TextStyle(
-                          //Tamaño de letras
                           fontSize: 32,
-                          //Negritas
                           fontWeight: FontWeight.bold,
-                          //Subrayado
                           decoration: TextDecoration.underline))
                 ],
               ),
@@ -67,12 +103,13 @@ class _HomePageState extends State<HomePage> {
             Expanded(
               child: TabBarView(
                 children: [
-                  DonutTab(),
-                  BurgerTab(),
-                  SmoothieTab(),
-                  PancakesTab(),
-                  PizzaTab(),
-                  //Aquí se agregarán las pestañas de los demás productos.
+                  DonutTab(
+                      addToCart:
+                          addToCart), // Pasamos la función a las pestañas
+                  BurgerTab(addToCart: addToCart),
+                  SmoothieTab(addToCart: addToCart),
+                  PancakesTab(addToCart: addToCart),
+                  PizzaTab(addToCart: addToCart),
                 ],
               ),
             ),
@@ -81,17 +118,16 @@ class _HomePageState extends State<HomePage> {
               color: Colors.white,
               padding: EdgeInsets.all(16),
               child: Row(
-                //Esto alinea los elementos a los extremos
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Padding(
+                  Padding(
                     padding: EdgeInsets.all(16.0),
                     child: Column(
-                      //Alinear horizontalmente una columna
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        // Mostrar número de items y total
                         Text(
-                          "2 Items | \$45",
+                          "$itemCount Items | \$${totalAmount.toStringAsFixed(2)}",
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,

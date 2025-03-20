@@ -7,6 +7,7 @@ class DonutTile extends StatelessWidget {
   // Es dinámico porque es de tipo color
   final dynamic donutColor;
   final String imageName;
+  final VoidCallback onAddToCart; // Agregamos el parámetro onAddToCart
 
   const DonutTile({
     super.key,
@@ -15,6 +16,7 @@ class DonutTile extends StatelessWidget {
     required this.donutBrand,
     this.donutColor,
     required this.imageName,
+    required this.onAddToCart, // Recibimos la función onAddToCart
   });
 
   @override
@@ -87,9 +89,10 @@ class DonutTile extends StatelessWidget {
                     Icons.favorite_border,
                     color: Colors.pink[400],
                   ),
-                  Icon(
-                    Icons.add,
+                  IconButton(
+                    icon: Icon(Icons.add),
                     color: Colors.grey[800],
+                    onPressed: onAddToCart, // Llamamos a la función onAddToCart
                   ),
                 ],
               ),
