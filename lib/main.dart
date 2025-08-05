@@ -1,4 +1,5 @@
-import 'package:donut_app_2c_flores/pages/home_page.dart';
+import 'package:donut_app_2c_flores/pages/login_page.dart';
+import 'package:donut_app_2c_flores/pages/home_page.dart'; // <-- Importa aquí tu HomePage
 import 'package:flutter/material.dart';
 
 void main() {
@@ -8,20 +9,21 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'donut_app',
       theme: ThemeData(
-        tabBarTheme: const TabBarTheme(
-          indicatorColor: Colors.pink,
-        ),
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const HomePage(),
+      initialRoute: "/",
+      routes: {
+        "/": (context) => LoginPage(),
+        "/home": (context) =>
+            const HomePage(), // <-- AQUI defines la ruta /home
+      },
     );
   }
 }
